@@ -1,6 +1,9 @@
 (async function () {
     const response = await fetch("./data.json")
-    const data = await response.json()
+    let responseToData = await response.json()
+    let data = responseToData.sort(function (a, b) {
+        return b.vote_count - a.vote_count;
+    });
     const searchBar = document.getElementById("searchBar")
     const applyBtn = document.getElementById("apply")
     const yearOpt = document.getElementById("year")
@@ -12,7 +15,6 @@
     let years = []
     let languages = []
     let ratings = []
-    console.log(data)
     //-------------------------------------GENRE--------------------------------GENRE-----------------------------------GENRE----------------------------
     data.forEach(function (obj) {
         const objGenres = obj.genres
@@ -97,6 +99,7 @@
         ratingOpt.appendChild(optElem)
     })
     //-------------------------------------RATINGS------------------------------RATINGS---------------------------------RATINGS--------------------------
+
     //-------------------------------------CARDS--------------------------------CARDS-----------------------------------CARDS----------------------------
     let cardIndex = 0;
     function formatTime(minutes) {
@@ -104,6 +107,22 @@
         const mins = minutes % 60;
         return `${hours}h ${mins}m`;
     }
+    function detailedCard() {
+        const innerCard = document.getElementById('inner_card');
+        const parentContainer = document.getElementById('parent_element');
+        let openCards = document.getElementsByClassName("card");
+        for (let i = 0; i < openCards.length; i++) {
+            openCards[i].addEventListener("click", function () {
+                parentContainer.classList.add('overlay');
+                innerCard.style.display = ('block');
+                innerCard.focus();
+            });
+            innerCard.addEventListener('blur', function () {
+                parentContainer.classList.remove('overlay');
+                innerCard.style.display = ('none');
+            });
+        }
+    } detailedCard()
     function renderCard(data) {
         cardContainer.innerHTML = "";
         data.forEach(function (obj) {
@@ -122,14 +141,16 @@
                 <img class="imdb" src="./images/imdb.svg" alt="">
                 <span class="dim_txt">${obj.vote_average}</span>
             </div>
-                <span class="dim_txt"><img class="rateCount" src="./images/rateCount.png">>${(obj.vote_count / 1000).toFixed(1)}</span>
+                <span class="dim_txt"><img class="rateCount" src="./images/rateCount.png">${(obj.vote_count / 1000).toFixed(1)}k</span>
             </div>
             <div class="card_genre">${obj.genres}</div>
             </div>`;
             cardContainer.appendChild(card);
         });
         loadMoreBtn.style.display = "none"
+        detailedCard()
     }
+
     (function self() {
         for (let i = cardIndex; i < cardIndex + 30 && i < data.length; i++) {
             const obj = data[i];
@@ -156,6 +177,7 @@
             cardContainer.appendChild(card);
         }
         cardIndex += 30
+        detailedCard()
     })()
     function loadCards() {
         // cardContainer.innerHTML = ""
@@ -183,10 +205,12 @@
             cardContainer.appendChild(card);
         }
         cardIndex += 30
+        detailedCard()
     }
     const loadMoreBtn = document.getElementById("load-more-btn");
     loadMoreBtn.addEventListener("click", loadCards);
     //-------------------------------------CARDS--------------------------------CARDS-----------------------------------CARDS----------------------------
+
     //-------------------------------------SEARCH-------------------------------SEARCH----------------------------------SEARCH---------------------------
     function search() {
         const query = searchBar.value.toLowerCase();
@@ -216,89 +240,46 @@
     }
     //-------------------------------------SEARCH-------------------------------SEARCH----------------------------------SEARCH---------------------------
     //-------------------------------------OPTION-------------------------------OPTION----------------------------------OPTION---------------------------
-    //-------------------------------------GENRE--------------------------------GENRE-----------------------------------GENRE----------------------------
-    function genreSearch() {
+    function typeSearch() {
         const genreQuery = genreOpt.value.toLowerCase();
-        const result = data.filter(function (item) {
-            if (Array.isArray(item.genres)) {
-                return item.genres.join(" ").toLowerCase().includes(genreQuery);
-            }
-            return false;
-        })
-        if (!genreQuery || genreQuery == "all") {
-            cardContainer.innerHTML = "";
-            cardIndex = 0;
-            loadCards();
-            loadMoreBtn.style.display = "block";
-            searchBar.value = "";
-            genreOpt.value = "all"
-        } else {
-            renderCard(result);
-            searchBar.value = "";
-            genreOpt.value = "all"
-        }
-    }
-    //-------------------------------------GENRE--------------------------------GENRE-----------------------------------GENRE----------------------------
-    //-------------------------------------YEAR---------------------------------YEAR------------------------------------YEAR-----------------------------
-    function yearSearch() {
         const yearQuery = yearOpt.value.toLowerCase();
-        const result = data.filter(function (item) {
-            return item.release_date.toLowerCase().includes(yearQuery);
-        });
-        if (yearQuery === "all") {
-            cardContainer.innerHTML = "";
-            cardIndex = 0;
-            loadCards();
-            loadMoreBtn.style.display = "block";
-            searchBar.value = ""
-            yearOpt.value = "all"
-        } else {
-            renderCard(result);
-            searchBar.value = ""
-            yearOpt.value = "all"
-        }
-    }
-    //-------------------------------------YEAR---------------------------------YEAR------------------------------------YEAR-----------------------------
-    //---------------------------------LANGUAGE----------------------------LANGUAGE---------------------------------LANGUAGE-----------------------------
-    function langSearch() {
         const langQuery = langOpt.value.toLowerCase();
+        const ratingQuery = +ratingOpt.value;
         const result = data.filter(function (item) {
-            return item.original_language.toLowerCase().includes(langQuery);
+            let isGenreMatched = true;
+            if (genreQuery && genreQuery !== "all") {
+                if (Array.isArray(item.genres)) {
+                    isGenreMatched = item.genres.join(" ").toLowerCase().includes(genreQuery);
+                } else {
+                    isGenreMatched = false;
+                }
+            }
+            let isYearMatched = true;
+            if (yearQuery && yearQuery !== "all") {
+                isYearMatched = item.release_date.toLowerCase().includes(yearQuery);
+            }
+            let isLangMatched = true;
+            if (langQuery && langQuery !== "all") {
+                isLangMatched = item.original_language.toLowerCase().includes(langQuery);
+            }
+            let isRatingMatched = true;
+            if (ratingQuery && ratingQuery !== "all") {
+                isRatingMatched = item.vote_average === ratingQuery;
+            }
+            return isGenreMatched && isYearMatched && isLangMatched && isRatingMatched;
         });
-        if (langQuery === "all") {
-            cardContainer.innerHTML = "";
-            cardIndex = 0;
-            loadCards();
-            loadMoreBtn.style.display = "block";
-            searchBar.value = ""
-            langOpt.value = "all"
+        if (result.length === 0) {
+            cardContainer.innerHTML = "No matching results found.";
+            loadMoreBtn.style.display = "none";
         } else {
             renderCard(result);
-            searchBar.value = ""
-            langOpt.value = "all"
         }
+        // genreOpt.value = "all";
+        // yearOpt.value = "all";
+        // langOpt.value = "all";
+        // ratingOpt.value = "all";
+        searchBar.value = "";
     }
-    //---------------------------------LANGUAGE----------------------------LANGUAGE---------------------------------LANGUAGE-----------------------------
-    //-------------------------------------RATE---------------------------------RATE------------------------------------RATE-----------------------------
-    function rateingSearch() {
-        const ratingQuery = +ratingOpt.value
-        const result = data.filter(function (item) {
-            return item.vote_average === ratingQuery
-        })
-        if (!ratingQuery) {
-            cardContainer.innerHTML = "";
-            cardIndex = 0;
-            loadCards();
-            loadMoreBtn.style.display = "block";
-            searchBar.value = ""
-            ratingOpt.value = "all"
-        } else {
-            renderCard(result);
-            searchBar.value = ""
-            ratingOpt.value = "all"
-        }
-    }
-    //-------------------------------------RATE---------------------------------RATE------------------------------------RATE-----------------------------
     //-------------------------------------OPTION-------------------------------OPTION----------------------------------OPTION---------------------------
 
     searchBar.addEventListener("keypress", function (event) {
@@ -307,16 +288,17 @@
         }
     });
     applyBtn.addEventListener("click", function () {
-        if (genreOpt.value != "all") {
-            genreSearch()
-        } else if (yearOpt.value != "all") {
-            yearSearch()
-        } else if (langOpt.value != "all") {
-            langSearch()
-        } else if (ratingOpt.value != "all") {
-            rateingSearch()
-        } else {
-            genreSearch()
-        }
+        typeSearch()
+        // if (genreOpt.value != "all") {
+        //     genreSearch()
+        // } else if (yearOpt.value != "all") {
+        //     yearSearch()
+        // } else if (langOpt.value != "all") {
+        //     langSearch()
+        // } else if (ratingOpt.value != "all") {
+        //     rateingSearch()
+        // } else {
+        //     genreSearch()
+        // }
     });
 })()

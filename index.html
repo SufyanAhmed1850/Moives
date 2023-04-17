@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -8,9 +7,8 @@
     <title>SpeedyTv</title>
     <link rel="stylesheet" href="style.css">
 </head>
-
-<body data-barba="wrapper">
-    <main data-barba="container" data-barba-namespace="home">
+<body>
+    <main>
         <header>
             <div>
                 <p class="brand yellow">SPEEDY<span class="dim">TV</span></p>
@@ -37,6 +35,20 @@
                         <option value="all" selected>Rating</option>
                     </select>
                     <button id="apply">Apply</button>
+                </div>
+                <div id="parent_element">
+                    <div id="inner_card" class="inner_card" tabindex="0">
+                        <div class="inner_content">
+                            <img class="card_img" src="./images/movie2.jpg">
+                            <div class="inner_details">
+                                <p class="inner_title">Blade Runner 2049</p>
+                                <div class="imdbContainer">
+                                    <img class="imdb" src="./images/imdb.svg" alt="">
+                                    <span class="dim_txt">8.9</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <section id="cardContainer" class="cards_wrapper">
                     <!-- <div class="card">
@@ -101,6 +113,7 @@
             </section>
         </section>
     </main>
+
 </body>
 <script src="https://unpkg.com/@barba/core"></script>
 <script src="https://cdn.jsdelivr.net/npm/@barba/core"></script>
