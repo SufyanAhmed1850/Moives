@@ -99,7 +99,6 @@
         ratingOpt.appendChild(optElem)
     })
     //-------------------------------------RATINGS------------------------------RATINGS---------------------------------RATINGS--------------------------
-
     //-------------------------------------CARDS--------------------------------CARDS-----------------------------------CARDS----------------------------
     let cardIndex = 0;
     function formatTime(minutes) {
@@ -150,11 +149,9 @@
         loadMoreBtn.style.display = "none"
         detailedCard()
     }
-
-    (function self() {
+    function self() {
         for (let i = cardIndex; i < cardIndex + 30 && i < data.length; i++) {
             const obj = data[i];
-            // cardContainer = ""
             const runtime = obj.runtime
             const formattedRunTime = formatTime(runtime)
             const card = document.createElement("div");
@@ -178,63 +175,55 @@
         }
         cardIndex += 30
         detailedCard()
-    })()
-    function loadCards() {
-        // cardContainer.innerHTML = ""
-        for (let i = cardIndex; i < cardIndex + 30 && i < data.length; i++) {
-            const obj = data[i];
-            const runtime = obj.runtime
-            const formattedRunTime = formatTime(runtime)
-            const card = document.createElement("div");
-            card.classList.add("card");
-            card.innerHTML = `
-            <p class="runtime" >${formattedRunTime}</p>
-            <img class="card_img" src="https://image.tmdb.org/t/p/w400/${obj.poster_path}">
-            <div class="details">
-            <p class="dim_txt">${obj.original_language},<span class="yellow"> ${obj.release_date.slice(0, 4)}</span></p>
-                <p class="title">${obj.title}</p>
-                <div class="imbd_rating">
-                <div class="imdbContainer">
-                    <img class="imdb" src="./images/imdb.svg" alt="">
-                    <span class="dim_txt">${obj.vote_average}</span>
-                </div>
-                    <span class="dim_txt"><img class="rateCount" src="./images/rateCount.png">${(obj.vote_count / 1000).toFixed(1)}</span>
-                    </div>
-                    <div class="card_genre">${obj.genres}</div>
-                    </div>`;
-            cardContainer.appendChild(card);
-        }
-        cardIndex += 30
-        detailedCard()
     }
+    self()
     const loadMoreBtn = document.getElementById("load-more-btn");
-    loadMoreBtn.addEventListener("click", loadCards);
+    loadMoreBtn.addEventListener("click", self);
     //-------------------------------------CARDS--------------------------------CARDS-----------------------------------CARDS----------------------------
-
     //-------------------------------------SEARCH-------------------------------SEARCH----------------------------------SEARCH---------------------------
     function search() {
         const query = searchBar.value.toLowerCase();
         const result = data.filter(function (item) {
-            return item.title.toLowerCase().includes(query);
+            let directorName = "";
+            let castName = "";
+            for (let i = 0; i < item.directors.length; i++) {
+                if (item.directors[i].name.toLowerCase().includes(query)) {
+                    directorName = item.directors[i].name;
+                    break;
+                }
+            }
+            for (let i = 0; i < item.cast.length; i++) {
+                if (item.cast[i].name.toLowerCase().includes(query)) {
+                    castName = item.cast[i].name;
+                    break;
+                }
+            }
+            return (item.title.toLowerCase().includes(query) || directorName.toLowerCase().includes(query) || castName.toLowerCase().includes(query))
         });
         if (result.length === 0) {
             cardContainer.innerHTML = "";
             console.log("NOT FOUND")
             yearOpt.value = "all"
             genreOpt.value = "all"
+            langOpt.value = "all"
+            ratingOpt.value = "all"
             loadMoreBtn.style.display = "none"
         }
         else if (query === "") {
             cardContainer.innerHTML = "";
             cardIndex = 0;
-            loadCards();
             loadMoreBtn.style.display = "block"
             yearOpt.value = "all"
             genreOpt.value = "all"
+            langOpt.value = "all"
+            ratingOpt.value = "all"
+            self();
         } else {
             renderCard(result);
             yearOpt.value = "all"
             genreOpt.value = "all"
+            langOpt.value = "all"
+            ratingOpt.value = "all"
             loadMoreBtn.style.display = "none"
         }
     }
@@ -271,17 +260,18 @@
         if (result.length === 0) {
             cardContainer.innerHTML = "No matching results found.";
             loadMoreBtn.style.display = "none";
-        } else {
+        } else if (genreOpt.value == "all" && yearOpt.value == "all" && langOpt.value == "all" && ratingOpt.value == "all") {
+            cardIndex = 0
+            cardContainer.innerHTML = ""
+            loadMoreBtn.style.display = "block"
+            self()
+        }
+        else {
             renderCard(result);
         }
-        // genreOpt.value = "all";
-        // yearOpt.value = "all";
-        // langOpt.value = "all";
-        // ratingOpt.value = "all";
         searchBar.value = "";
     }
     //-------------------------------------OPTION-------------------------------OPTION----------------------------------OPTION---------------------------
-
     searchBar.addEventListener("keypress", function (event) {
         if (event.key === "Enter") {
             search();
@@ -289,16 +279,5 @@
     });
     applyBtn.addEventListener("click", function () {
         typeSearch()
-        // if (genreOpt.value != "all") {
-        //     genreSearch()
-        // } else if (yearOpt.value != "all") {
-        //     yearSearch()
-        // } else if (langOpt.value != "all") {
-        //     langSearch()
-        // } else if (ratingOpt.value != "all") {
-        //     rateingSearch()
-        // } else {
-        //     genreSearch()
-        // }
     });
 })()
