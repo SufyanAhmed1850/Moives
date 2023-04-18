@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,6 +8,7 @@
     <title>SpeedyTv</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
     <main>
         <header>
@@ -14,7 +16,7 @@
                 <p class="brand yellow">SPEEDY<span class="dim">TV</span></p>
             </div>
             <div class="search_input">
-                <img src="./images/search.png">
+                <img src="./images/search.svg">
                 <input id="searchBar" type="text" placeholder="Search for movies, actors & directors">
             </div>
             <div class="hide"></div>
@@ -39,12 +41,32 @@
                 <div id="parent_element">
                     <div id="inner_card" class="inner_card" tabindex="0">
                         <div class="inner_content">
-                            <img class="card_img" src="./images/movie.jpg">
+                            <img class="inner_img" src="./images/movie.jpg">
                             <div class="inner_details">
-                                <p class="inner_title">Blade Runner 2049</p>
-                                <div class="imdbContainer">
-                                    <img class="imdb" src="./images/imdb.svg" alt="">
-                                    <span class="dim_txt">8.9</span>
+                                <p class="inner_title">Interstellar</p>
+                                <div class="inner_first">
+                                    <div class="inner_imbdContainer">
+                                        <img class="inner_imdb" src="./images/imdb.svg">
+                                        <span class="dim_txt inner_rate">8.3</span>
+                                        <span class="dim_txt">|</span>
+                                        <span class="dim_txt inner_vote_count">25503</span>
+                                    </div>
+                                    <div class="sec">
+                                        <p>2h 49m</p>
+                                        <ul class="inner_genre">
+                                            <li>Adventure,Drama,Science Fiction</li>
+                                            <li>2014</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="inner_overview">
+                                    <p>The adventures of a group of explorers who make use of a newly discovered
+                                        wormhole to surpass the limitations on human space travel and conquer the vast
+                                        distances involved in an interstellar voyage.</p>
+                                </div>
+                                <div class="inner_buttons">
+                                    <a href="javascript:void(0)" class="watchList">ADD TO WATCHLIST</a>
+                                    <a href="https://www.youtube.com/watch?v=2LqzF5WauAw" class="trailer">TRAILER</a>
                                 </div>
                             </div>
                         </div>
@@ -115,8 +137,6 @@
     </main>
 
 </body>
-<script src="https://unpkg.com/@barba/core"></script>
-<script src="https://cdn.jsdelivr.net/npm/@barba/core"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/gsap.min.js"></script>
 <script src="app.js"></script>
 

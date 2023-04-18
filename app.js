@@ -116,10 +116,10 @@
                 innerCard.style.display = ('block');
                 innerCard.focus();
             });
-            innerCard.addEventListener('blur', function () {
-                parentContainer.classList.remove('overlay');
-                innerCard.style.display = ('none');
-            });
+            // innerCard.addEventListener('blur', function () {
+            //     parentContainer.classList.remove('overlay');
+            //     innerCard.style.display = ('none');
+            // });
         }
     } detailedCard()
     function renderCard(data) {

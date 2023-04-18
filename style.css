@@ -10,7 +10,7 @@
 :root {
     --clr-bg-: #121620;
     --clr-yellow-: #febf00;
-    --clr-dim-text-: #a29e91;
+    --clr-dim-text-: #ffffffad;
     --clr-light-bg-: #1c212e;
     --clr-font-: #ffffff;
 }
@@ -52,8 +52,9 @@ header>div {
 }
 
 .search_input img {
-    width: 18px;
+    width: 20px;
     opacity: 0.4;
+    filter: invert(100%);
 }
 
 .search_input input {
@@ -270,7 +271,7 @@ header>div {
     z-index: 3;
     display: none;
     border: none;
-    border-radius: .3rem;
+    border-radius: .35rem;
     outline: none;
 }
 
@@ -285,7 +286,7 @@ header>div {
     z-index: 3;
     display: none;
     border: none;
-    border-radius: .3rem;
+    border-radius: .35rem;
     outline: none;
 }
 
@@ -294,6 +295,8 @@ header>div {
     display: flex;
     justify-content: flex-end;
     height: 75vh;
+    border-radius: .35rem;
+    overflow: hidden;
 }
 
 .inner_content::before {
@@ -306,14 +309,14 @@ header>div {
     background-image: linear-gradient(to top, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0));
 }
 
-.inner_content img {
+.inner_img {
     width: 100%;
     object-fit: cover;
     object-position: 0px 0px;
 }
 
 .inner_details {
-    padding: 1rem  5rem;
+    padding: 1rem 5rem;
     position: absolute;
     left: 0;
     bottom: 0;
@@ -322,6 +325,7 @@ header>div {
 .inner_title {
     font-weight: 800;
     font-size: 3rem;
+    margin-bottom: .5rem;
 }
 
 .overlay {
@@ -334,4 +338,73 @@ header>div {
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     z-index: 2;
+}
+
+.inner_imbdContainer {
+    display: flex;
+    align-items: center;
+    width: max-content;
+    gap: .5rem;
+}
+
+.inner_rate {
+    font-size: 1.2rem;
+}
+
+.inner_rating_txt {
+    font-size: 1.2rem;
+}
+
+.inner_imdb {
+    width: 35px;
+}
+
+.inner_first {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    margin-bottom: 1.25rem;
+}
+
+.sec {
+    display: flex;
+    gap: 1.5rem;
+    font-size: .85rem;
+    color: var(--clr-dim-text-);
+}
+
+.inner_vote_count {
+    font-size: .85rem;
+}
+
+.inner_genre {
+    display: flex;
+    gap: 2rem;
+}
+
+.inner_overview {
+    width: 50%;
+    color: var(--clr-dim-text-);
+}
+
+.inner_buttons {
+    margin: 3rem 0;
+    display: flex;
+    gap: 2.5rem;
+}
+
+.watchList {
+    background-color: var(--clr-yellow-);
+    color: black;
+}
+
+.trailer {
+    background-color: rgba(255, 255, 255, .25);
+    color: var(--clr-font-);
+}
+
+.inner_buttons a {
+    text-decoration: none;
+    padding: .85rem 3rem;
+    border-radius: .35rem;
 }
