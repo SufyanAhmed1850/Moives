@@ -106,22 +106,6 @@
         const mins = minutes % 60;
         return `${hours}h ${mins}m`;
     }
-    function detailedCard() {
-        const innerCard = document.getElementById('inner_card');
-        const parentContainer = document.getElementById('parent_element');
-        let openCards = document.getElementsByClassName("card");
-        for (let i = 0; i < openCards.length; i++) {
-            openCards[i].addEventListener("click", function () {
-                parentContainer.classList.add('overlay');
-                innerCard.style.display = ('block');
-                innerCard.focus();
-            });
-            // innerCard.addEventListener('blur', function () {
-            //     parentContainer.classList.remove('overlay');
-            //     innerCard.style.display = ('none');
-            // });
-        }
-    } detailedCard()
     function renderCard(data) {
         cardContainer.innerHTML = "";
         data.forEach(function (obj) {
@@ -147,7 +131,6 @@
             cardContainer.appendChild(card);
         });
         loadMoreBtn.style.display = "none"
-        detailedCard()
     }
     function self() {
         for (let i = cardIndex; i < cardIndex + 30 && i < data.length; i++) {
@@ -174,7 +157,6 @@
             cardContainer.appendChild(card);
         }
         cardIndex += 30
-        detailedCard()
     }
     self()
     const loadMoreBtn = document.getElementById("load-more-btn");
