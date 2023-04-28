@@ -129,16 +129,55 @@
             <div class="card_genre">${obj.genres}</div>
             </div>`;
             cardContainer.appendChild(card);
+            const testGenre = document.getElementById("testgenre")
+            const parentElement = document.createElement("div")
+            parentElement.id = "parent_element"
+            parentElement.innerHTML = `
+            <div id="${obj.title}" class="inner_card" tabindex="0">
+                        <div class="inner_content">
+                            <div class="close">
+                                <img class="closeImg" src="./images/close.svg">
+                            </div>
+                            <img class="inner_img" src="https://image.tmdb.org/t/p/original/${obj.poster_path}">
+                            <div class="inner_details">
+                                <p class="inner_title">${obj.title}</p>
+                                <div class="inner_first">
+                                    <div class="inner_imbdContainer">
+                                        <img class="inner_imdb" src="./images/imdb.svg">
+                                        <span class="dim_txt inner_rate">${obj.vote_average}</span>
+                                        <span class="dim_txt">|</span>
+                                        <span class="dim_txt inner_vote_count">${(obj.vote_count / 1000).toFixed(1)}k</span>
+                                    </div>
+                                    <div class="sec">
+                                        <p>${formattedRunTime}</p>
+                                        <ul class="inner_genre">
+                                            <li>${obj.genres}</li>
+                                            <li>${obj.release_date.slice(0, 4)}</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="inner_overview">
+                                    <p>${obj.overview}</p>
+                                </div>
+                                <div class="inner_buttons" tabindex="0">
+                                    <a id="watchList" href="javascript:void(0)" class="watchList"><img class="watchListImg" src="./images/add.svg"> ADD TO WATCHLIST</a>
+                                    <a id="trailer" href="https://www.youtube.com/watch?v=${obj.trailer_yt}" target="_blank" class="trailer"><img class="trailerImg" src="./images/play.svg" alt="">TRAILER</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>`
+            testGenre.appendChild(parentElement)
         });
         loadMoreBtn.style.display = "none"
+        detailedCard()
     }
     function self() {
         for (let i = cardIndex; i < cardIndex + 30 && i < data.length; i++) {
             const obj = data[i];
             const runtime = obj.runtime
             const formattedRunTime = formatTime(runtime)
-            const card = document.createElement("div");
-            card.classList.add("card");
+            const card = document.createElement("div")
+            card.classList.add("card")
             card.innerHTML = `
             <p class="runtime" >${formattedRunTime}</p>
             <img class="card_img" src="https://image.tmdb.org/t/p/w400/${obj.poster_path}">
@@ -155,10 +194,82 @@
                 <div class="card_genre">${obj.genres}</div>
             </div>`;
             cardContainer.appendChild(card);
+            const testGenre = document.getElementById("testgenre")
+            const parentElement = document.createElement("div")
+            parentElement.id = "parent_element"
+            parentElement.innerHTML = `
+            <div id="${obj.title}" class="inner_card" tabindex="0">
+                        <div class="inner_content">
+                            <div class="close">
+                                <img class="closeImg" src="./images/close.svg">
+                            </div>
+                            <img class="inner_img" src="https://image.tmdb.org/t/p/original/${obj.poster_path}">
+                            <div class="inner_details">
+                                <p class="inner_title">${obj.title}</p>
+                                <div class="inner_first">
+                                    <div class="inner_imbdContainer">
+                                        <img class="inner_imdb" src="./images/imdb.svg">
+                                        <span class="dim_txt inner_rate">${obj.vote_average}</span>
+                                        <span class="dim_txt">|</span>
+                                        <span class="dim_txt inner_vote_count">${(obj.vote_count / 1000).toFixed(1)}k</span>
+                                    </div>
+                                    <div class="sec">
+                                        <p>${formattedRunTime}</p>
+                                        <ul class="inner_genre">
+                                            <li>${obj.genres}</li>
+                                            <li>${obj.release_date.slice(0, 4)}</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="inner_overview">
+                                    <p>${obj.overview}</p>
+                                </div>
+                                <div class="inner_buttons" tabindex="0">
+                                    <a id="watchList" href="javascript:void(0)" class="watchList"><img class="watchListImg" src="./images/add.svg"> ADD TO WATCHLIST</a>
+                                    <a id="trailer" href="https://www.youtube.com/watch?v=${obj.trailer_yt}" target="_blank" class="trailer"><img class="trailerImg" src="./images/play.svg" alt="">TRAILER</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>`
+            testGenre.appendChild(parentElement)
         }
         cardIndex += 30
+        detailedCard()
     }
     self()
+    function detailedCard() {
+        const cards = document.querySelectorAll('.card');
+        const parentContainer = document.getElementById('parent_element');
+        let innerCard;
+        cards.forEach((card) => {
+            card.addEventListener('click', function () {
+                const id = card.querySelector('.title').innerHTML;
+                innerCard = document.getElementById(id);
+                innerCard.style.display = 'block';
+                parentContainer.classList.add('overlay');
+            });
+        });
+        const closeBtn = document.querySelectorAll('.close');
+        closeBtn.forEach((close) => {
+            close.addEventListener('click', function () {
+                innerCard.style.display = 'none';
+                parentContainer.classList.remove('overlay');
+            })
+        })
+        const watchListBtns = document.querySelectorAll(".watchList");
+        watchListBtns.forEach((watchListBtn) => {
+            let clicked = false;
+            watchListBtn.addEventListener("click", function () {
+                if (!clicked) {
+                    watchListBtn.innerHTML = '<img class="watchListImg" src="./images/added.svg"> ADDED TO WATCHLIST';
+                    clicked = true;
+                } else {
+                    watchListBtn.innerHTML = '<img class="watchListImg" src="./images/add.svg"> ADD TO WATCHLIST';
+                    clicked = false;
+                }
+            });
+        });
+    } detailedCard();
     const loadMoreBtn = document.getElementById("load-more-btn");
     loadMoreBtn.addEventListener("click", self);
     //-------------------------------------CARDS--------------------------------CARDS-----------------------------------CARDS----------------------------
