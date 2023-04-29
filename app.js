@@ -235,8 +235,7 @@
         }
         cardIndex += 30
         detailedCard()
-    }
-    self()
+    } self()
     function detailedCard() {
         const cards = document.querySelectorAll('.card');
         const parentContainer = document.getElementById('parent_element');
